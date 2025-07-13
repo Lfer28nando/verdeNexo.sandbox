@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tienda de Calzado - Ferk</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/backend/public/css/styles.css">
+</head>
+<body>
+
+  <!-- barra de navegación -->
+  <nav class="navbar navbar-expand-lg navbar-jesska sticky-top">
+    <div class="container">
+      <a class="navbar-brand navbar-brand-jesska" href="index.html">JESSKA</a>
+      <button class="navbar-toggler navbar-toggler-jesska" type="button" data-bs-toggle="collapse" data-bs-target="#navbarJesska">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarJesska">
+        <ul class="navbar-nav ms-auto mb-3 mb-lg-0">
+          <li class="nav-item"><a class="nav-link nav-link-jesska" href="catalogo.html">Deporte</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-jesska" href="catalogo.html">Mujer</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-jesska" href="catalogo.html">Niños</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-jesska" href="catalogo.html">Accesorios</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-jesska" href="catalogo.html">Hombre</a></li>
+        </ul>
+        <div class="ms-lg-3 d-flex gap-2">
+          <button class="btn jesska-btn-sesiones" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</button>
+          <button class="btn jesska-btn-sesiones" data-bs-toggle="modal" data-bs-target="#registerModal">Crear Cuenta</button>
+
+          <!-- carrito -->
+          <div class="dropdown">
+            <button class="btn rounded-0 px-4 position-relative" id="carritoToggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="assets/img/c1.png" alt="carrito" width="33" height="33">
+              <span id="carrito-contador" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end p-3" id="carritoDropdown" style="min-width: 300px;">
+              <li><strong>Carrito</strong></li>
+              <li><hr class="dropdown-divider"></li>
+              <li id="carrito-lista"></li>
+              <li class="mt-2 fw-bold" id="carrito-total"></li>
+              <li><button class="btn btn-sm btn-outline-danger w-100 mt-2" onclick="vaciarCarrito()">Vaciar carrito</button></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- banner de desc de envio -->
+  <div class="jesska-banner-envio"> Envio gratis por compras superiores a <strong>$299.000</strong> <br>
+    <a href="catalogo.html" class="compra"> Compra Ahora </a>
+  </div>
