@@ -14,7 +14,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(`mongodb+srv://${process.env.USER_BD}:${process.env.PASS_BD}@cluster0.tosktcp.mongodb.net/${process.env.BASEDATOS}?retryWrites=true&w=majority`)
+mongoose.connect(`mongodb+srv://${process.env.USER_BD}:${process.env.PASS_BD}@bd.yf87cce.mongodb.net/${process.env.BASEDATOS}?retryWrites=true&w=majority`)
   .then(() => {
     console.log('MongoDB Conectado');
 
