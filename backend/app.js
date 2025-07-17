@@ -7,7 +7,8 @@ dotenv.config(); //activa la carga de variables de entorno desde el archivo .env
 app.use(cors()); // activamos el middleware cors para permitir peticiones desde otros dominios (como el frontend 4444)
 app.use(express.json()); //activamos el middleware express.json() para poder recibir datos en formato JSON en las peticiones HTTP(como POST o PUT)
 
-app.post('/api/productos', (req, res) => {
+//  post
+app.get('/api/productos', (req, res) => {
     res.json([
         { id: 1, name: 'Monstera', price: 41000 },
         { id: 2, name: 'Suculenta', price: 20000 },

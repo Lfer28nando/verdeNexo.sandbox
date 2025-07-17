@@ -1,0 +1,19 @@
+document.addEventListener('DOMContentLoaded', ()=> {
+    fetch('http://localhost:3333/api/productos')// hacemos una petición GET al backend para obtener los productos, se usa addEventListener para asegurarnos de que el DOM esté completamente cargado antes de ejecutar el código, el DOM es el árbol de elementos HTML que componen la página web; fetch() es una función de JavaScript que permite hacer peticiones HTTP, en este caso al backend que corre en el puerto 3333 para obtener los productos; http://localhost:3333/api/productos es la URL del endpoint que hemos definido en el backend para obtener los productos; Mejor dicho va al servidor backend que corre en el puerto 3333 y le pide los productos a la ruta /api/productos y espera la respuesta.
+
+    .then(response => response.json()) //Cuando la petición se completa, convertimos la respuesta a formato JSON, response es el objeto de respuesta que contiene los datos que nos envía el backend, y res.json() es un método que convierte esa respuesta en un objeto JavaScript. Esta conversión es necesaria para poder usarla como un array de productos en el frontend.
+
+    .then(data => {
+        const contenedor = document.getElementById('lista-productos'); // data es el array de productos ({id:1,name: 'Monstera', price:41000}, etc) que hemos recibido del backend, y lo asignamos a la variable data; getElementById busca una etiqueta que tenga ese id en el HTML, en este caso 'lista-productos', que es donde vamos a mostrar los productos; contenedor es una variable que contiene el elemento del DOM donde vamos a insertar los productos. Lo usamos para saber donde meter los productos.
+        data.forEach(producto => { //recorremos cada producto del array data (Monstera,Suculenta,etc.), forEach es un método de los arrays que ejecuta una función para cada elemento del array, en este caso para cada producto; producto es el parámetro que representa cada elemento del array data mientras lo recorremos.
+            const div = document.createElement('div'); // Creamos un nuevo elemento div para cada producto, createElement es un método que crea un nuevo elemento HTML, en este caso un div; div es una variable que representa el nuevo elemento div que vamos a crear.
+            div.classList.add('producto-card'); // Añadimos una clase CSS al div para darle estilo, classList.add es un método que añade una clase a la lista de clases del elemento, en este caso 'producto-card' es la clase que hemos definido en nuestro CSS para estilizar los productos.
+            div.innerHTML = `
+                <h5>${producto.name}</h5>
+                <p>Precio: $${producto.price}</p>
+                `; // Aquí insertamos el contenido HTML dentro del div, usando template literals (``) para poder incluir variables de JavaScript directamente en el HTML, ${producto.name} y ${producto.price} son las propiedades del objeto producto que hemos recibido de data y que queremos mostrar en el div; h5 es un elemento HTML que representa un encabezado de nivel 5, y p es un párrafo.
+            contenedor.appendChild(div); // Finalmente, añadimos el div al contenedor en el DOM, appendChild es un método que añade un nuevo nodo como hijo del nodo especificado, en este caso estamos añadiendo el div que hemos creado al contenedor que hemos seleccionado anteriormente. en otras palabras, estamos insertando el div con el producto dentro del contenedor que tiene el id 'lista-productos'.
+        });
+    })
+    .catch(error => console.error('Error al cargar los productos:', error)); // Si ocurre un error durante la petición, lo mostramos en la consola, catch es un método que captura cualquier error que ocurra en la cadena de promesas anterior.
+});
