@@ -9,6 +9,8 @@ dotenv.config(); //activa la carga de variables de entorno desde el archivo .env
 app.use(cors()); // activamos el middleware cors para permitir peticiones desde otros dominios (como el frontend 4444)
 app.use(express.json()); //activamos el middleware express.json() para poder recibir datos en formato JSON en las peticiones HTTP(como POST o PUT)
 
+app.use('/uploads', express.static('uploads')); // configuramos express para servir archivos estáticos desde la carpeta 'uploads' (donde se guardarán las imágenes de los productos)
+
 mongoose.connect(process.env.MONGO_URI) // conectamos a la base de datos MongoDB usando la URI del archivo .env
     .then(() => {
         console.log('MongoDB Conectado'); // mostramos un mensaje en la consola indicando que la conexión a MongoDB fue exitosa

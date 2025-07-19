@@ -1,19 +1,38 @@
+const multer = require('multer'); // importamos multer para manejar la subida de archivos
+const path = require('path'); // importamos path para manejar rutas de archivos
 const express = require('express'); // importamos express
 const router = express.Router(); // creamos un enrutador de express
 const Producto = require('../models/producto.model'); // importamos el modelo Producto
 
-router.post('/', async (req, res) => {
-    try {
-        const { nombre, precio, imagen } = req.body; // extraemos los datos del cuerpo de la solicitud
-        const nuevoProducto = new Producto({ nombre, precio, imagen }); // creamos una nueva instancia del modelo Producto
-        await nuevoProducto.save(); // guardamos el producto en la base de datos
-        res.status(201).json(nuevoProducto); // respondemos con el producto creado y un estado 201 (creado)
-    }
-    catch (error) {
-        console.error('Error al crear el producto:', error); // mostramos un error en la consola si ocurre
-        res.status(500).json({ message: 'Error al crear el producto' }); // respondemos con un estado 500 (error interno del servidor)
+// Configuración de multer para manejar la subida de imágenes
+// Configuración de multer para manejar la subida de archivos
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // carpeta donde se guardarán las imágenes
+    },
+    filename: function (req, file, cb) {
+        const uniqueName = Date.now() + '-' + file.originalname; // generamos un nombre único para el archivo
+        cb(null, uniqueName); // usamos el nombre único como nombre del archivo
     }
 });
+const upload = multer({ storage: storage }); // creamos una instancia de multer con la configuración
+
+
+router.post('/', upload.single('imagen'), async (req, res) => {
+  try {
+    const nombre = req.body?.nombre;
+    const precio = req.body?.precio;
+    // Si se sube una imagen, multer la guardará y le asignará un nombre
+    const imagen = req.file ? req.file.filename : null;
+
+    const nuevoProducto = new Producto({ nombre, precio, imagen });
+    await nuevoProducto.save();
+    res.status(201).json(nuevoProducto);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al guardar el producto', error });
+  }
+});
+
 
 // Ruta para obtener todos los productos
 router.get('/', async (req, res) => {
@@ -74,6 +93,5 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ mensaje: 'Error al eliminar el producto', error });
   }
 });
-
 
 module.exports = router; // exportamos el enrutador para que pueda ser utilizado en otros archivos
