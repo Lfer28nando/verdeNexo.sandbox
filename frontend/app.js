@@ -1,5 +1,7 @@
 const express = require('express'); //importamos express que es el framework que usamos para crear servidores en Node.js
+
 const path = require('path'); //importamos path, que es un módulo de Node.js para manejar rutas de archivos
+
 const app = express(); //creamos una instancia de express, que es nuestra aplicación web
 
 app.set('view engine', 'ejs'); // configuramos EJS como el motor de plantillas para renderizar vistas

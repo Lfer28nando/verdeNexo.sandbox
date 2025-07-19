@@ -2,7 +2,7 @@ function login(event) {
     event.preventDefault();
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
-    if(email === 'admin@jesska.com' && password === 'admin123') {
+    if(email === 'admin@loom.com' && password === 'admin123') {
       window.location.href = 'dashboard.html';
     } else {
       alert('Credenciales incorrectas');
@@ -95,7 +95,7 @@ function login(event) {
   });
 
 function moverSlider(direccion) {
-  const slider = document.getElementById("jesskaSlider");
-  const itemWidth = slider.querySelector(".jesska-item").offsetWidth + 16; // ancho + gap
-  slider.scrollLeft += direccion * itemWidth * 5; // mover 5 ítems
+  const slider = document.getElementById("loomSlider");
+  const itemWidth = slider.querySelector(".loom-item").offsetWidth + 16; // ancho + gap
+  slider.scrollLeft += direccion * itemWidth * 1; // mover 1 ítems
 }

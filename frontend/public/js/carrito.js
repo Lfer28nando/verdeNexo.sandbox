@@ -1,8 +1,8 @@
-let carrito = JSON.parse(localStorage.getItem("carritoJesska")) || [];
+let carrito = JSON.parse(localStorage.getItem("carritoloom")) || [];
 
 function agregarAlCarrito(nombre, precio) {
   carrito.push({ nombre, precio });
-  localStorage.setItem("carritoJesska", JSON.stringify(carrito));
+  localStorage.setItem("carritoloom", JSON.stringify(carrito));
   actualizarContadorCarrito();
   renderizarCarritoDropdown();
 }
@@ -39,7 +39,7 @@ function renderizarCarritoDropdown() {
 
 function vaciarCarrito() {
   carrito = [];
-  localStorage.setItem("carritoJesska", JSON.stringify(carrito));
+  localStorage.setItem("carritoloom", JSON.stringify(carrito));
   actualizarContadorCarrito();
   renderizarCarritoDropdown();
 }

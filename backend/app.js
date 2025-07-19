@@ -12,7 +12,14 @@ app.get('/api/productos', (req, res) => {
     res.json([
         { id: 1, name: 'Monstera', price: 41000 },
         { id: 2, name: 'Suculenta', price: 20000 },
-        { id: 3, name: 'Sanseviera', price: 30000 }
+        { id: 3, name: 'Sanseviera', price: 30000 },
+        { id: 4, name: 'Cactus', price: 15000 },
+        { id: 5, name: 'Poto', price: 25000 },
+        { id: 6, name: 'Palmera', price: 50000 },
+        { id: 7, name: 'Orquídea', price: 60000 },
+        { id: 8, name: 'Bonsai', price: 70000 },
+        { id: 9, name: 'Ficus', price: 80000 },
+        { id: 10, name: 'Ciclamen', price: 90000 }
     ]);
 }); // definimos una ruta POST que recibe datos de productos y responde con un JSON de ejemplo
 

@@ -4,8 +4,8 @@ function mostrarVista(id) {
   document.querySelectorAll('.vista-dashboard').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 
-  document.querySelectorAll('.sidebar-jesska nav a').forEach(a => a.classList.remove('active'));
-  document.querySelector(`.sidebar-jesska nav a[onclick*="${id}"]`)?.classList.add('active');
+  document.querySelectorAll('.sidebar-loom nav a').forEach(a => a.classList.remove('active'));
+  document.querySelector(`.sidebar-loom nav a[onclick*="${id}"]`)?.classList.add('active');
 }
 
 function cargarTotales() {

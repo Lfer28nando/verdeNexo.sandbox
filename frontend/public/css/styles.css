@@ -1,175 +1,177 @@
-.navbar-jesska {
-    background-color:#fff;
-    box-shadow:0 2px 10px #0000001a;
-    padding:15px 0
-    }
-    
-    .navbar-brand-jesska {
-    font-size:28px;
-    font-weight:700;
-    color:#000;
-    letter-spacing:1px
-    }
-    
-    .nav-link-jesska {
-    font-weight:500;
-    color:#333;
-    margin:0 10px;
-    position:relative;
-    text-transform:uppercase;
-    font-size:14px
-    }
-    
-    .nav-link-jesska:hover {
-    color:#000
-    }
-    
-    .nav-link-jesska:after {
-    content:'';
-    position:absolute;
-    width:0;
-    height:2px;
-    background:#000;
-    bottom:-5px;
-    left:0;
-    transition:width .3s
-    }
-    
-    .nav-link-jesska:hover:after {
-    width:100%
-    }
-    
-    .navbar-toggler-jesska {
-    border:none;
-    padding:5px
-    }
-    
-    .navbar-toggler-jesska:focus {
-    box-shadow:none
-    }
-  
-    .jesska-btn {
-      background-color: #1a1a1a;
-      color: #9a9a9a;
-      border: 1px solid #1a1a1a;
-      padding: 0.7rem 1.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-radius: 3px;
-      transition: all 0.3s ease-in-out;
-    }
-    .jesska-btn:hover{
-      background-color: transparent;
-      color: #1a1a1a;
-      border: 1px solid #1a1a1a;
-      transform: scale(1.05);
-    }
-      .jesska-btn-sesiones {
-      background-color: transparent;
-      color: #1a1a1a;
-      border: 1px solid #1a1a1a;
-      padding: 0.4rem 0.4rem;
-      font-weight: 500;
-      border-radius: 4px;
-      transition: background-color 0.3s, color 0.3s all;
-    }
-    .jesska-btn-sesiones:hover{
-      background-color: #1a1a1a;
-      color: white;
-    }
-    .jesska-banner-envio{
-      background-color: #f8f8f8;
-      text-align: center;
-      padding: 0.5rem;
-      font-size: 0.95rem;
-      color: #111;
-      font-weight: 400;
-      border-bottom: 1px solid #ddd;
-  }
-  .jesska-banner-envio .compra{
+.navbar-loom {
+    background-color: #fff;
+    box-shadow: 0 2px 10px #0000001a;
+    padding: 15px 0;
+}
+
+.navbar-brand-loom {
+    font-size: 28px;
+    font-weight: 700;
+    color: #000;
+    letter-spacing: 1px;
+}
+
+.nav-link-loom {
+    font-weight: 500;
+    color: #333;
+    margin: 0 10px;
+    position: relative;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.nav-link-loom:hover {
+    color: #000;
+}
+
+.nav-link-loom:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #000;
+    bottom: -5px;
+    left: 0;
+    transition: width .3s;
+}
+
+.nav-link-loom:hover:after {
+    width: 100%;
+}
+
+.navbar-toggler-loom {
+    border: none;
+    padding: 5px;
+}
+
+.navbar-toggler-loom:focus {
+    box-shadow: none;
+}
+
+.loom-btn {
+    background-color: #1a1a1a;
+    color: #9a9a9a;
+    border: 1px solid #1a1a1a;
+    padding: 0.7rem 1.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 3px;
+    transition: all 0.3s ease-in-out;
+}
+
+.loom-btn:hover {
+    background-color: transparent;
+    color: #1a1a1a;
+    border: 1px solid #1a1a1a;
+    transform: scale(1.05);
+}
+
+.loom-btn-sesiones {
+    background-color: transparent;
+    color: #1a1a1a;
+    border: 1px solid #1a1a1a;
+    padding: 0.4rem 0.4rem;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s all;
+}
+
+.loom-btn-sesiones:hover {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.loom-banner-envio {
+    background-color: #f8f8f8;
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.95rem;
+    color: #111;
+    font-weight: 400;
+    border-bottom: 1px solid #ddd;
+}
+
+.loom-banner-envio .compra {
     font-weight: bold;
     color: #111;
     text-decoration: none;
     font-size: 0.85rem;
-  }
-  .jesska-banner-envio .compra:hover{
+}
+
+.loom-banner-envio .compra:hover {
     text-decoration: underline;
-  }
-  .jesska-card-horizontales{
+}
+
+.loom-card-horizontales {
     height: 800px;
     background-color: #eee;
     border-radius: 8px;
-  }
-  .jesska-card-horizontales img{
+}
+
+.loom-card-horizontales img {
     height: 100%;
     object-fit: cover;
     filter: brightness(85%);
-  }
-  .jesska-overlay-text{
+}
+
+.loom-overlay-text {
     position: absolute;
     bottom: 20px;
     left: 20px;
     color: white;
     z-index: 2;
-    text-shadow: 0 0 10px rgba(0,0,0,0.6);
-  }
-  .jesska-card-horizontales .btn {
-      background-color: #ffffff;
-      color: #000000;
-      border: 1px solid #1a1a1a;
-      padding: 0.4rem 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-radius: 3px;
-      transition: all 0.3s ease-in-out;
-  }
-  
-  .jesska-card-horizontales .btn:hover {
-      background-color: #232323;
-      color: #c1c1c1;
-      border: 1px solid #1a1a1a;
-      transform: scale(1.05);
-  }
-  .jesska-slider-container {
-    scroll-behavior: smooth;
-    gap: 1rem;
-    padding: 0 2rem;
-    margin: 0 auto;
-    overflow-x: auto;
-  }
-  
-  .jesska-item {
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.loom-card-horizontales .btn {
+    background-color: #ffffff;
+    color: #000000;
+    border: 0px solid #1a1a1a;
+    padding: 0.4rem 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 3px;
+    transition: all 0.3s ease-in-out;
+}
+
+.loom-card-horizontales .btn:hover {
+    background-color: #232323;
+    color: #c1c1c1;
+    border: 1px solid #1a1a1a;
+    transform: scale(1.05);
+}
+
+/* SLIDER ESTILIZADO */
+.loom-item {
     flex: 0 0 calc(20% - 1rem);
     max-width: calc(20% - 1rem);
-    background: #000;
+    background: #000000d6;
     color: #fff;
-    padding: 1rem;
-    border-radius: 8px;
+    padding: 2rem;
     transition: transform 0.3s;
     scroll-snap-align: start;
-  }
-  
-  
-  .jesska-item img {
+    text-align: center;
+}
+
+.loom-item img {
     width: 100%;
     height: 380px;
     object-fit: cover;
     border-radius: 6px;
     background-color: white;
-  }
-  
-  
-  .jesska-item:hover {
-    transform: scale(1.01);
-  }
-  
-  .slider-arrow {
+}
+
+.loom-item:hover {
+    transform: scale(1.05);
+}
+
+.slider-arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: #000;
+    background: #000000;
     color: white;
     border: none;
     font-size: 2rem;
@@ -177,55 +179,62 @@
     cursor: pointer;
     z-index: 10;
     opacity: 0.6;
-  }
-  
-  .slider-arrow:hover {
+}
+
+.slider-arrow:hover {
     opacity: 1;
-  }
-  
-  .slider-arrow.left {
+}
+
+.slider-arrow.left {
     left: 0;
-  }
-  
-  .slider-arrow.right {
+}
+
+.slider-arrow.right {
     right: 0;
-  }
-  
-  .bg-light {
+}
+
+.bg-light {
     background-color: #f8f8f8 !important;
-  }
-  
-  .producto-card {
-    border-radius: 12px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid #f0f0f0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
-  
-  .producto-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.1);
-  }
-  
-  .producto-card img {
-    border-radius: 8px;
-    object-fit: cover;
-    height: 250px;
-    width: 100%;
-  }
-  
-  .producto-imagen img {
-    transition: transform 0.3s ease;
-    object-fit: cover;
-  }
-  
-  .producto-imagen:hover img {
+}
+
+/* TARJETAS DE PRODUCTO (ACTUALIZADAS) */
+.producto-card {
+  min-width: 220px;
+  flex-shrink: 0;
+  background: #000;
+  color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.producto-card:hover {
+  transform: translateY(-5px);
+}
+
+.producto-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.producto-imagen:hover img {
     transform: scale(1.03);
-  }
-  
-  .color-circle {
+}
+
+.color-circle {
     width: 25px;
     height: 25px;
     border-radius: 50%;
     border: 1px solid #ddd;
-  }
+}
+
+#lista-productos {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1.5rem;
+}
