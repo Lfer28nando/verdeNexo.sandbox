@@ -4,7 +4,6 @@ const express = require('express'); // importamos express
 const router = express.Router(); // creamos un enrutador de express
 const Producto = require('../models/producto.model'); // importamos el modelo Producto
 
-// Configuración de multer para manejar la subida de imágenes
 // Configuración de multer para manejar la subida de archivos
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
