@@ -1,7 +1,7 @@
 const express = require('express'); //importamos express que es el framework que usamos para crear servidores en Node.js
 const mongoose = require('mongoose'); //importamos mongoose, que es un ODM (Object Data Modeling) para MongoDB y Node.js
 const path = require('path'); //importamos path, que es un módulo nativo de Node.js que nos permite trabajar con rutas de archivos y directorios
-const dotenv = require('dotenv'); //importamos dotenv, que es un paquete que carga variables de entorno desde un archivo .env (donde podemos guardar configuraciones sensibles como puertos o claves API, usuarios, contraseñas, etc.)
+const dotenv = require('dotenv'); //importamos dotenv, que es un paquete que carga variables de entorno desde un archivo .env (donde podemos guardar configuraciones sensibles como puertos o claves API, usuarios, passwords, etc.)
 
 dotenv.config(); //activa la carga de variables de entorno desde el archivo .env
 
