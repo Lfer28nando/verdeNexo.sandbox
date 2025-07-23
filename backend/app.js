@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rutas
 app.use('/api/auth', authRoutes);
-app.use('/api/productos', verificarToken, productosRoutes);
+app.use('/api/productos', productosRoutes);
 app.use('/uploads', express.static('uploads'));
 
 // Conexión Mongo

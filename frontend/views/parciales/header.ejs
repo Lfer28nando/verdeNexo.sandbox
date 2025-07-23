@@ -24,9 +24,19 @@
           <li class="nav-item"><a class="nav-link nav-link-loom" href="catalogo.html">contacto</a></li>
           <li class="nav-item"><a class="nav-link nav-link-loom" href="catalogo.html">servicios</a></li>
         </ul>
-        <div class="ms-lg-3 d-flex gap-2">
-          <button class="btn loom-btn-sesiones" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</button>
-          <button class="btn loom-btn-sesiones" data-bs-toggle="modal" data-bs-target="#registerModal">Crear Cuenta</button>
+        <div class="ms-lg-3 d-flex gap-2 align-items-center">
+        <!-- Botones visibles solo si NO hay sesión -->
+          <div id="botonesSesion">
+           <button class="btn loom-btn-sesiones" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</button>
+           <button class="btn loom-btn-sesiones" data-bs-toggle="modal" data-bs-target="#registerModal">Crear Cuenta</button>
+          </div>
+
+        <!-- Avatar visible solo si hay sesión -->
+          <div id="avatarSesion" style="display: none;">
+            <img id="avatarImg" src="/img/default-avatar.png" alt="Usuario" class="rounded-circle" width="38" height="38" style="cursor: pointer;">
+          </div>
+        </div>
+
 
           <!-- carrito -->
           <div class="dropdown">

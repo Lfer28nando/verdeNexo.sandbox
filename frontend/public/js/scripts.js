@@ -1,14 +1,140 @@
-function login(event) {
-    event.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    if(email === 'admin@loom.com' && password === 'admin123') {
-      window.location.href = 'dashboard.html';
+async function register(e) {
+  e.preventDefault();
+
+  const nombre = document.getElementById('registerNombre').value;
+  const email = document.getElementById('registerEmail').value;
+  const password = document.getElementById('registerPassword').value;
+
+  try {
+    const res = await fetch('http://localhost:3333/api/auth/registro', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, email, password })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert('Cuenta creada con éxito');
+      const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+      modal.hide();
     } else {
-      alert('Credenciales incorrectas');
+      alert(`Error: ${data.mensaje}`);
     }
-    return false;
+  } catch (error) {
+    console.error('Error en el registro:', error);
+    alert('Error en el servidor');
   }
+
+  return false;
+}
+
+
+async function login(e) {
+  e.preventDefault();
+
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+
+  try {
+    const res = await fetch('http://localhost:3333/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      // Guardar token y datos del usuario
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('usuario', JSON.stringify(data.usuario));
+
+      alert('Sesión iniciada correctamente');
+
+      // Cerrar modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+      modal.hide();
+
+      // Redirigir según el rol
+      if (data.usuario.rol === 'admin') {
+        window.location.href = '/admin';
+      } else {
+        window.location.href = '/';
+      }
+    } else {
+      alert(`Error: ${data.mensaje}`);
+    }
+
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    alert('Error en el servidor');
+  }
+
+  return false;
+}
+
+// Mostrar panel si hay usuario logueado
+document.addEventListener('DOMContentLoaded', () => {
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+  const panel = document.getElementById('userPanel');
+  const botones = document.getElementById('botonesSesion');
+  const avatar = document.getElementById('avatarSesion');
+
+  if (usuario) {
+    botones.style.display = 'none';
+    avatar.style.display = 'block';
+
+    document.getElementById('avatarImg')?.addEventListener('click', () => {
+  const modal = new bootstrap.Modal(document.getElementById('userPanelModal'));
+  modal.show();
+});
+
+
+    // Mostrar nombre
+    document.getElementById('userName').innerText = usuario.nombre;
+  } else {
+    botones.style.display = 'block';
+    avatar.style.display = 'none';
+  }
+});
+
+
+// Cerrar sesión
+function cerrarSesion() {
+  localStorage.clear();
+  alert('Sesión cerrada');
+  window.location.href = '/';
+}
+
+// Solicitar permiso (placeholder por ahora)
+function solicitarPermiso() {
+  alert('Tu solicitud ha sido enviada. (Aquí va la lógica real luego)');
+}
+
+// Subir foto
+document.getElementById('formFoto')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fileInput = document.getElementById('fotoPerfil');
+  const formData = new FormData();
+  formData.append('foto', fileInput.files[0]);
+
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch('http://localhost:3333/api/usuarios/foto', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData
+    });
+
+    const data = await res.json();
+    alert(data.mensaje || 'Foto subida');
+  } catch (err) {
+    alert('Error al subir la foto');
+  }
+});
+
+
   const formulario = document.querySelector("form");
   const cuerpoTabla = document.querySelector("table tbody");
   

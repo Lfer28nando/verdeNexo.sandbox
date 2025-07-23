@@ -1,0 +1,22 @@
+<!-- Modal del Panel de Usuario -->
+<div class="modal fade" id="userPanelModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header border-0">
+        <h5 class="modal-title">👋 Hola, <span id="userName" class="text-capitalize"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <button onclick="solicitarPermiso()" class="loom-btn-sesiones w-100 mb-2">Solicitar ser vendedor</button>
+
+        <form id="formFoto" enctype="multipart/form-data" class="mb-2">
+          <input type="file" id="fotoPerfil" class="form-control form-control-sm mb-2" accept="image/*" required>
+          <button type="submit" class="loom-btn-sesiones w-100">Subir foto</button>
+        </form>
+
+        <button onclick="editarPerfil()" class="loom-btn-sesiones w-100 mb-2">Editar perfil</button>
+        <button onclick="cerrarSesion()" class="loom-btn-sesiones w-100">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
