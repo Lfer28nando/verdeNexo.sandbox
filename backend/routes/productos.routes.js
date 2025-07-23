@@ -1,51 +1,34 @@
-const multer = require('multer'); // importamos multer para manejar la subida de archivos
-const path = require('path'); // importamos path para manejar rutas de archivos
-const express = require('express'); // importamos express
-const router = express.Router(); // creamos un enrutador de express
-const Producto = require('../models/producto.model'); // importamos el modelo Producto
+const multer = require('multer');
+const path = require('path');
+const express = require('express');
+const router = express.Router();
+const Producto = require('../models/producto.model');
+const { verificarToken, soloAdmin } = require('../middlewares/auth'); // ← importa middlewares
 
-// Configuración de multer para manejar la subida de archivos
+// Configuración de multer
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // carpeta donde se guardarán las imágenes
-    },
-    filename: function (req, file, cb) {
-        const uniqueName = Date.now() + '-' + file.originalname; // generamos un nombre único para el archivo
-        cb(null, uniqueName); // usamos el nombre único como nombre del archivo
-    }
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + '-' + file.originalname;
+    cb(null, uniqueName);
+  }
 });
-const upload = multer({ storage: storage }); // creamos una instancia de multer con la configuración
+const upload = multer({ storage: storage });
 
-
-router.post('/', upload.single('imagen'), async (req, res) => {
+// ✅ Ruta pública: Obtener todos los productos
+router.get('/', async (req, res) => {
   try {
-    const nombre = req.body?.nombre;
-    const precio = req.body?.precio;
-    // Si se sube una imagen, multer la guardará y le asignará un nombre
-    const imagen = req.file ? req.file.filename : null;
-
-    const nuevoProducto = new Producto({ nombre, precio, imagen });
-    await nuevoProducto.save();
-    res.status(201).json(nuevoProducto);
+    const productos = await Producto.find();
+    res.status(200).json(productos);
   } catch (error) {
-    res.status(500).json({ mensaje: 'Error al guardar el producto', error });
+    console.error('Error al obtener los productos:', error);
+    res.status(500).json({ message: 'Error al obtener los productos' });
   }
 });
 
-
-// Ruta para obtener todos los productos
-router.get('/', async (req, res) => {
-    try {
-        const productos = await Producto.find(); // buscamos todos los productos en la base de datos
-        res.status(200).json(productos); // respondemos con los productos encontrados y un estado 200 (OK)
-    }
-    catch (error) {
-        console.error('Error al obtener los productos:', error); // mostramos un error en la consola si ocurre
-        res.status(500).json({ message: 'Error al obtener los productos' }); // respondemos con un estado 500 (error interno del servidor)
-    }
-});
-
-// Ruta para obtener un producto por ID
+// ✅ Ruta pública: Obtener un producto por ID
 router.get('/:id', async (req, res) => {
   try {
     const producto = await Producto.findById(req.params.id);
@@ -58,14 +41,29 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// ruta para editar un producto por ID
-router.put('/:id', async (req, res) => {
+// 🔐 Crear producto: requiere token + rol admin
+router.post('/', verificarToken, soloAdmin, upload.single('imagen'), async (req, res) => {
+  try {
+    const nombre = req.body?.nombre;
+    const precio = req.body?.precio;
+    const imagen = req.file ? req.file.filename : null;
+
+    const nuevoProducto = new Producto({ nombre, precio, imagen });
+    await nuevoProducto.save();
+    res.status(201).json(nuevoProducto);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al guardar el producto', error });
+  }
+});
+
+// 🔐 Editar producto: requiere token + rol admin
+router.put('/:id', verificarToken, soloAdmin, async (req, res) => {
   try {
     const { nombre, precio, imagen } = req.body;
     const productoActualizado = await Producto.findByIdAndUpdate(
       req.params.id,
       { nombre, precio, imagen },
-      { new: true } // para que devuelva el producto actualizado
+      { new: true }
     );
 
     if (!productoActualizado) {
@@ -78,8 +76,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-//ruta para eliminar un producto por ID
-router.delete('/:id', async (req, res) => {
+// 🔐 Eliminar producto: requiere token + rol admin
+router.delete('/:id', verificarToken, soloAdmin, async (req, res) => {
   try {
     const productoEliminado = await Producto.findByIdAndDelete(req.params.id);
 
@@ -93,4 +91,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router; // exportamos el enrutador para que pueda ser utilizado en otros archivos
+module.exports = router;
