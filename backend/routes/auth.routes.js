@@ -3,18 +3,22 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken'); // importamos jsonwebtoken para manejar la autenticación.
 const Usuario = require('../models/usuario.model'); // importamos el modelo Usuario
-
+const enviarCorreo = require('../utils/email.service'); // importamos la función para enviar correos
 //registro
 router.post('/registro', async (req, res) => {
   try {
     const { nombre, email, password, rol } = req.body; // obtenemos los datos del cuerpo de la solicitud
     const nuevoUsuario = new Usuario({ nombre, email, password, rol }); // creamos una nueva instancia del modelo Usuario
     await nuevoUsuario.save(); // guardamos el usuario en la base de datos
-    res.status(201).json({ mensaje: 'Usuario registrado exitosamente' }); // respondemos con un mensaje de éxito
+    await enviarCorreo(email, 'Bienvenido a VerdeNexo', `<p>Hola ${nombre}, tu cuenta ha sido creada exitosamente.</p>`); // enviamos un correo de bienvenida al usuario
+    res.status(201).json({ mensaje: 'Usuario registrado y correo enviado' }); // respondemos con un mensaje de éxito
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al registrar el usuario', error: error.message }); // manejamos errores
   }
 });
+// Este archivo maneja las rutas de autenticación, incluyendo el registro y el inicio de sesión de usuarios.
+
+// Enviar correo de bienvenida
 
 
 //login

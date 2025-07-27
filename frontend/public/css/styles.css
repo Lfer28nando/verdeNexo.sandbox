@@ -254,6 +254,7 @@
     background: #7e7d7d;
     color: white;
     border-radius: 12px;
+    margin-top: 2rem;
     padding: 1rem;
     text-align: left;
     transition: transform 0.3s ease;

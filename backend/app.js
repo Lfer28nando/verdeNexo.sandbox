@@ -7,6 +7,7 @@ const app = express();
 const authRoutes = require('./routes/auth.routes');
 const productosRoutes = require('./routes/productos.routes');
 const { verificarToken } = require('./middlewares/auth');
+const nodemailer = require('nodemailer');
 
 // Middlewares
 app.use(cors());
