@@ -12,6 +12,10 @@ app.get('/', (req, res) => {
     res.render('paginas/inicio'); // renderizamos la vista de inicio
 });
 
+app.get('/admin',(req,res) => {
+    res.render('paginas/homeAdmin'); //renderizamos la vista del admin
+});
+
 const PORT = 4444; // definimos el puerto en el que escuchará nuestro servidor, que es el 4444 para el frontend
 app.listen(PORT, () => {
     console.log(`Frontend corriendo en http://localhost:${PORT}`); // iniciamos el servidor y mostramos un mensaje en la consola indicando que está corriendo

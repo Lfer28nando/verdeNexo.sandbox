@@ -225,3 +225,7 @@ function moverSlider(direccion) {
   const itemWidth = slider.querySelector(".loom-item").offsetWidth + 16; // ancho + gap
   slider.scrollLeft += direccion * itemWidth * 1; // mover 1 ítems
 }
+
+
+//
+document.querySelector("#pcoded > div.pcoded-container.navbar-wrapper > div.pcoded-main-container > div > div.pcoded-content > div.pcoded-inner-content > div > div > div > div > div.col-md-12.col-xl-8")
