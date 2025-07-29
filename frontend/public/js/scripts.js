@@ -8,6 +8,7 @@ async function register(e) {
   try {
     const res = await fetch('http://localhost:3333/api/auth/registro', {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nombre, email, password })
     });
@@ -40,16 +41,14 @@ async function login(e) {
     const res = await fetch('http://localhost:3333/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password }),
+      credentials: 'include' // Para enviar cookies
     });
 
     const data = await res.json();
 
     if (res.ok) {
-      // Guardar token y datos del usuario
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('usuario', JSON.stringify(data.usuario));
-
+     
       alert('Sesión iniciada correctamente');
 
       // Cerrar modal

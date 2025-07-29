@@ -14,9 +14,11 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
-app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors({
+  origin: 'http://localhost:4444',
+  credentials: true
+}));
 
 // Rutas
 app.use('/api/auth', authRoutes);
