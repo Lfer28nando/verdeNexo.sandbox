@@ -3,10 +3,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
 import cors from 'cors';
-import nodemailer from 'nodemailer';
 import authRoutes from './routes/auth.routes.js';
 import productosRoutes from './routes/productos.routes.js';
-import { verificarToken } from './middlewares/auth.js';
 
 //Variables de entorno:
 dotenv.config();

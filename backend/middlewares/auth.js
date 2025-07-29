@@ -1,4 +1,6 @@
+// Importaciones;
 import jwt from 'jsonwebtoken';
+
 
 function verificarToken(req, res, next) {
   const token = req.headers['authorization'];
