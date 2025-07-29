@@ -1,18 +1,24 @@
-require('dotenv').config();
-const mongoose = require('mongoose');
-const express = require('express');
-const cors = require('cors');
+//Importaciones:
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import express from 'express';
+import cors from 'cors';
+import nodemailer from 'nodemailer';
+import authRoutes from './routes/auth.routes.js';
+import productosRoutes from './routes/productos.routes.js';
+import { verificarToken } from './middlewares/auth.js';
+
+//Variables de entorno:
+dotenv.config();
+
+//Instancia de Express:
 const app = express();
 
-const authRoutes = require('./routes/auth.routes');
-const productosRoutes = require('./routes/productos.routes');
-const { verificarToken } = require('./middlewares/auth');
-const nodemailer = require('nodemailer');
-
 // Middlewares
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+
 
 // Rutas
 app.use('/api/auth', authRoutes);
@@ -25,7 +31,6 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.error('Error de conexión MongoDB:', err.message));
 
 // Arranque del server
-const PORT = process.env.PORT || 3333;
-app.listen(PORT, () => {
-    console.log(`Backend corriendo en http://localhost:${PORT}`);
-});
+app.listen(process.env.PORT, () => {
+    console.log(`Backend corriendo en http://localhost:${process.env.PORT}`);
+});  

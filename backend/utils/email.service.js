@@ -1,4 +1,9 @@
-const nodemailer = require('nodemailer');
+//Importaciones:
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+//variable de entorno.
+dotenv.config();
 
 // Configuración del transporter
 const transporter = nodemailer.createTransport({
@@ -38,4 +43,4 @@ function enviarCorreo(destinatario, asunto, mensajeHtml) {
     });
 }
 
-module.exports = enviarCorreo;
+export default enviarCorreo;

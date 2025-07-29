@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 function verificarToken(req, res, next) {
   const token = req.headers['authorization'];
@@ -23,7 +23,7 @@ function soloAdmin(req, res, next) {
   next();
 }
 
-module.exports = {
+export {
   verificarToken,
   soloAdmin
 };

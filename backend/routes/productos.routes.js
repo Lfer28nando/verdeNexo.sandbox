@@ -1,11 +1,13 @@
-const multer = require('multer');
-const path = require('path');
-const express = require('express');
-const router = express.Router();
-const Producto = require('../models/producto.model');
-const { verificarToken, soloAdmin } = require('../middlewares/auth'); // ← importa middlewares
+//Importaciones:
+import multer from 'multer';
+import express from 'express';
+import Producto from '../models/producto.model.js';
+import { verificarToken, soloAdmin } from '../middlewares/auth.js';
 
-// Configuración de multer
+//Instancia de Entrutador:
+const router = express.Router();
+
+// Configuración de multer:
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
@@ -17,7 +19,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// ✅ Ruta pública: Obtener todos los productos
+//Ruta publica: Productos
 router.get('/', async (req, res) => {
   try {
     const productos = await Producto.find();
@@ -28,7 +30,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ✅ Ruta pública: Obtener un producto por ID
+//Ruta publica: producto por ID
 router.get('/:id', async (req, res) => {
   try {
     const producto = await Producto.findById(req.params.id);
@@ -41,7 +43,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// 🔐 Crear producto: requiere token + rol admin
+// Ruta Privada: Crear producto: requiere token + rol admin
 router.post('/', verificarToken, soloAdmin, upload.single('imagen'), async (req, res) => {
   try {
     const nombre = req.body?.nombre;
@@ -56,7 +58,7 @@ router.post('/', verificarToken, soloAdmin, upload.single('imagen'), async (req,
   }
 });
 
-// 🔐 Editar producto: requiere token + rol admin
+// Ruta Privada: Editar producto: requiere token + rol admin
 router.put('/:id', verificarToken, soloAdmin, async (req, res) => {
   try {
     const { nombre, precio, imagen } = req.body;
@@ -76,7 +78,7 @@ router.put('/:id', verificarToken, soloAdmin, async (req, res) => {
   }
 });
 
-// 🔐 Eliminar producto: requiere token + rol admin
+// Ruta Privada: Eliminar producto: requiere token + rol admin
 router.delete('/:id', verificarToken, soloAdmin, async (req, res) => {
   try {
     const productoEliminado = await Producto.findByIdAndDelete(req.params.id);
@@ -91,4 +93,4 @@ router.delete('/:id', verificarToken, soloAdmin, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
