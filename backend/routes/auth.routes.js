@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import { usuarioModel } from '../models/usuario.model.js';
 import enviarCorreo from '../utils/email.service.js';
 import cookieParser from 'cookie-parser';
+import { soloAdmin } from '../middlewares/auth.js';
+import { verificarToken } from '../middlewares/auth.js';
 
 //Instancia de Enrutador:
 const router = express.Router();
@@ -38,11 +40,27 @@ router.post('/login', async (req, res) => {
       maxAge: 3600000 // 1 hora
     });
 
-    res.status(200).json({ mensaje: 'Login exitoso', usuario: { id: usuario._id, nombre: usuario.nombre, email: usuario.email } });
+    res.status(200).json({ mensaje: 'Login exitoso', usuario: { id: usuario._id, nombre: usuario.nombre, email: usuario.email, rol: usuario.rol } });
 
   } catch (error) {
     res.status(401).json({ mensaje: 'Error al iniciar sesión', error: error.message });
   }
+});
+
+//ruta de cierre de sesión
+router.post('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.status(200).json({ mensaje: 'Sesión cerrada' });
+});
+
+
+//Ruta Privada: admin
+router.get('/admin', verificarToken, soloAdmin, async (req, res) => {
+try { 
+  res.status(200).json({ mensaje: 'Bienvenido al área de administración', usuario: req.usuario });
+} catch (error) {
+  res.status(500).json({ mensaje: 'area restringida'});
+}
 });
 
 export default router;

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 
 function verificarToken(req, res, next) {
-  const token = req.headers['authorization'];
+  const token = req.cookies.token;
 
   if (!token) {
     return res.status(403).json({ mensaje: 'Token requerido' });
@@ -11,6 +11,7 @@ function verificarToken(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('Token decodificado:', decoded); // debug
     req.usuario = decoded;
     next();
   } catch (error) {

@@ -16,6 +16,8 @@ async function register(e) {
     const data = await res.json();
 
     if (res.ok) {
+      localStorage.setItem('usuario', JSON.stringify(data.usuario));
+
       alert('Cuenta creada con éxito');
       const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
       modal.hide();
@@ -48,12 +50,21 @@ async function login(e) {
     const data = await res.json();
 
     if (res.ok) {
-     
+      // 💾 Guarda usuario inmediatamente
+      localStorage.setItem('usuario', JSON.stringify(data.usuario));
+
       alert('Sesión iniciada correctamente');
 
       // Cerrar modal
       const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
       modal.hide();
+
+      // Mostrar panel sin esperar al reload
+      const botones = document.getElementById('botonesSesion');
+      const avatar = document.getElementById('avatarSesion');
+      botones.style.display = 'none';
+      avatar.style.display = 'block';
+      document.getElementById('userName').innerText = data.usuario.nombre;
 
       // Redirigir según el rol
       if (data.usuario.rol === 'admin') {
@@ -61,6 +72,7 @@ async function login(e) {
       } else {
         window.location.href = '/';
       }
+
     } else {
       alert(`Error: ${data.mensaje}`);
     }
@@ -72,6 +84,51 @@ async function login(e) {
 
   return false;
 }
+
+async function cerrarSesion() {
+  try {
+    await fetch('http://localhost:3333/api/auth/logout', {
+      method: 'POST',
+      credentials: 'include'
+    });
+
+    // Limpiar localStorage
+    localStorage.removeItem('usuario');
+
+    // Redirigir al inicio
+    alert('Sesión cerrada');
+    window.location.href = '/';
+  } catch (err) {
+    console.error('Error al cerrar sesión:', err);
+    alert('No se pudo cerrar la sesión');
+  }
+}
+
+ async function verificarAccesoAdmin() {
+    try {
+      const res = await fetch('http://localhost:3333/api/auth/admin', {
+        credentials: 'include'
+      });
+
+      if (res.ok) {
+        // ✅ Mostrar la página
+        document.documentElement.style.visibility = 'visible';
+      } else {
+        // ❌ Usuario no autorizado, redirigir sin alert
+        window.location.replace('/');
+      }
+    } catch (error) {
+      // ❌ Error al verificar, redirigir sin alert
+      window.location.replace('/');
+    }
+  }
+
+  if (window.location.pathname === '/admin') {
+  verificarAccesoAdmin();
+}
+
+
+  // Llamar inmediatamente al cargar la vista
 
 // Mostrar panel si hay usuario logueado
 document.addEventListener('DOMContentLoaded', () => {
@@ -99,12 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Cerrar sesión
-function cerrarSesion() {
-  localStorage.clear();
-  alert('Sesión cerrada');
-  window.location.href = '/';
-}
 
 // Solicitar permiso (placeholder por ahora)
 function solicitarPermiso() {
@@ -150,8 +201,6 @@ document.getElementById('formFoto')?.addEventListener('submit', async (e) => {
   
         const inputs = this.querySelectorAll("input, select");
         const valores = Array.from(inputs).map(input => input.value);
-  
-        const tabla = this.nextElementSibling.querySelector("tbody");
   
         if (elementoEditando) {
           for (let i = 1; i < valores.length + 1; i++) {
@@ -224,7 +273,3 @@ function moverSlider(direccion) {
   const itemWidth = slider.querySelector(".loom-item").offsetWidth + 16; // ancho + gap
   slider.scrollLeft += direccion * itemWidth * 1; // mover 1 ítems
 }
-
-
-//
-document.querySelector("#pcoded > div.pcoded-container.navbar-wrapper > div.pcoded-main-container > div > div.pcoded-content > div.pcoded-inner-content > div > div > div > div > div.col-md-12.col-xl-8")
