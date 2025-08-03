@@ -16,7 +16,7 @@ const Usuario = mongoose.model('Usuario', usuarioSchema);
 //usuarioModel con validaciones:
 export class usuarioModel {
   //registrar
-  static async create({ nombre, email, password }) {
+  static async create({ nombre, email, password, rol = 'cliente' }) {
     validaciones.nombre(nombre);
     validaciones.email(email);
     validaciones.password(password);
@@ -32,10 +32,17 @@ export class usuarioModel {
     const nuevoUsuario = new Usuario({
      nombre,
      email,
-     password : hashedPassword 
+     password : hashedPassword,
+     rol
     });
 
      return await nuevoUsuario.save();
+  }
+
+  //obtener por email
+  static async getByEmail(email) {
+    validaciones.email(email);
+    return await Usuario.findOne({ email });
   }
 
   //entrar

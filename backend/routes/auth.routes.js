@@ -3,15 +3,11 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import { usuarioModel } from '../models/usuario.model.js';
 import enviarCorreo from '../utils/email.service.js';
-import cookieParser from 'cookie-parser';
 import { soloAdmin } from '../middlewares/auth.js';
 import { verificarToken } from '../middlewares/auth.js';
 
 //Instancia de Enrutador:
 const router = express.Router();
-
-// Middleware para parsear cookies
-router.use(cookieParser());
 
 // Ruta del Registro
 router.post('/registro', async (req, res) => {

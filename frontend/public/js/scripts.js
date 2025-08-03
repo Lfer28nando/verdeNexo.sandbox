@@ -64,7 +64,13 @@ async function login(e) {
       const avatar = document.getElementById('avatarSesion');
       botones.style.display = 'none';
       avatar.style.display = 'block';
-      document.getElementById('userName').innerText = data.usuario.nombre;
+      
+      // Establecer nombre del usuario en diferentes elementos
+      const userName = document.getElementById('userName');
+      if (userName) userName.innerText = data.usuario.nombre;
+      
+      const usuarioNombre = document.getElementById('usuarioNombre');
+      if (usuarioNombre) usuarioNombre.textContent = data.usuario.nombre;
 
       // Redirigir según el rol
       if (data.usuario.rol === 'admin') {
@@ -87,20 +93,31 @@ async function login(e) {
 
 async function cerrarSesion() {
   try {
-    await fetch('http://localhost:3333/api/auth/logout', {
+    const response = await fetch('http://localhost:3333/api/auth/logout', {
       method: 'POST',
       credentials: 'include'
     });
 
-    // Limpiar localStorage
-    localStorage.removeItem('usuario');
+    if (response.ok) {
+      // Limpiar localStorage
+      localStorage.removeItem('usuario');
+      
+      // Ocultar avatar y mostrar botones de sesión
+      const botones = document.getElementById('botonesSesion');
+      const avatar = document.getElementById('avatarSesion');
+      
+      if (botones) botones.style.display = 'block';
+      if (avatar) avatar.style.display = 'none';
 
-    // Redirigir al inicio
-    alert('Sesión cerrada');
-    window.location.href = '/';
+      // Mostrar mensaje y redirigir
+      alert('Sesión cerrada exitosamente');
+      window.location.href = '/';
+    } else {
+      throw new Error('Error en la respuesta del servidor');
+    }
   } catch (err) {
     console.error('Error al cerrar sesión:', err);
-    alert('No se pudo cerrar la sesión');
+    alert('No se pudo cerrar la sesión. Intenta nuevamente.');
   }
 }
 
@@ -140,12 +157,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if (usuario) {
     botones.style.display = 'none';
     avatar.style.display = 'block';
+    
+    // Establecer nombre del usuario en el dropdown
+    const usuarioNombre = document.getElementById('usuarioNombre');
+    if (usuarioNombre) {
+      usuarioNombre.textContent = usuario.nombre || 'Usuario';
+    }
 
     document.getElementById('avatarImg')?.addEventListener('click', () => {
-  const modal = new bootstrap.Modal(document.getElementById('userPanelModal'));
-  modal.show();
-});
-
+      const modal = new bootstrap.Modal(document.getElementById('userPanelModal'));
+      modal.show();
+    });
 
     // Mostrar nombre
     document.getElementById('userName').innerText = usuario.nombre;
@@ -195,20 +217,29 @@ document.getElementById('formFoto')?.addEventListener('submit', async (e) => {
   document.addEventListener("DOMContentLoaded", () => {
     const formularios = document.querySelectorAll("form");
   
+  // Gestión de formularios dinámicos
+  document.addEventListener("DOMContentLoaded", () => {
+    const formularios = document.querySelectorAll("form");
+    let elementoEditando = null;
+
     formularios.forEach(formulario => {
       formulario.addEventListener("submit", function (evento) {
         evento.preventDefault();
   
         const inputs = this.querySelectorAll("input, select");
         const valores = Array.from(inputs).map(input => input.value);
-  
+        
+        // Buscar la tabla correspondiente en la misma sección
+        const seccion = this.closest(".seccion");
+        const tabla = seccion ? seccion.querySelector("table tbody") : null;
+
         if (elementoEditando) {
           for (let i = 1; i < valores.length + 1; i++) {
             elementoEditando.children[i].textContent = valores[i - 1];
           }
           elementoEditando = null;
           alert("Datos actualizados correctamente ");
-        } else {
+        } else if (tabla) {
           const nuevaFila = document.createElement("tr");
           let celdas = `<td>#</td>`;
           valores.forEach(valor => {
@@ -228,7 +259,7 @@ document.getElementById('formFoto')?.addEventListener('submit', async (e) => {
         this.reset();
       });
     });
-  
+    
     const secciones = document.querySelectorAll(".seccion");
   
     secciones.forEach(seccion => {
@@ -266,10 +297,42 @@ document.getElementById('formFoto')?.addEventListener('submit', async (e) => {
         }
       });
     });
-  });
+  }); // Cierre de DOMContentLoaded
 
 function moverSlider(direccion) {
   const slider = document.getElementById("loomSlider");
   const itemWidth = slider.querySelector(".loom-item").offsetWidth + 16; // ancho + gap
   slider.scrollLeft += direccion * itemWidth * 1; // mover 1 ítems
 }
+
+// Función temporal para testing - simular usuario logueado
+function simularLogin() {
+  const usuarioTest = {
+    id: 'test123',
+    nombre: 'Admin Test',
+    email: 'admin@test.com',
+    rol: 'admin'
+  };
+  
+  localStorage.setItem('usuario', JSON.stringify(usuarioTest));
+  
+  // Mostrar avatar y ocultar botones
+  const botones = document.getElementById('botonesSesion');
+  const avatar = document.getElementById('avatarSesion');
+  const usuarioNombre = document.getElementById('usuarioNombre');
+  
+  if (botones) botones.style.display = 'none';
+  if (avatar) avatar.style.display = 'block';
+  if (usuarioNombre) usuarioNombre.textContent = usuarioTest.nombre;
+  
+  console.log('✅ Usuario test simulado:', usuarioTest);
+  alert('Usuario de prueba logueado. Ahora puedes probar el botón de cerrar sesión.');
+}
+
+// Hacer las funciones disponibles globalmente
+window.simularLogin = simularLogin;
+window.cerrarSesion = cerrarSesion;
+
+// Log para debugging
+console.log('🚀 Scripts de VerdeNexo cargados correctamente');
+console.log('💡 Para probar el logout, ejecuta: simularLogin() en la consola');
