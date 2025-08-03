@@ -6,6 +6,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes.js';
 import productosRoutes from './routes/productos.routes.js';
+import usuariosRoutes from './routes/usuarios.routes.js';
 
 //Variables de entorno:
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(cors({
 // Rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/productos', productosRoutes);
+app.use('/api/usuarios', usuariosRoutes);
 app.use('/uploads', express.static('uploads'));
 
 // Conexión Mongo

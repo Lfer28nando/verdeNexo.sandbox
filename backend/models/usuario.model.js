@@ -8,6 +8,8 @@ const usuarioSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   rol: { type: String, enum: ['cliente', 'vendedor', 'admin'], default: 'cliente' },
+}, {
+  timestamps: true // Esto agrega createdAt y updatedAt automáticamente
 });
 
 //Modelo:
@@ -57,7 +59,17 @@ export class usuarioModel {
     if (!passwordValida) throw new Error('Contraseña incorrectos.');
 
     return usuario;
-}
+  }
+
+  //obtener todos los usuarios
+  static async getAll() {
+    return await Usuario.find({}).select('-password'); // Excluir contraseñas por seguridad
+  }
+
+  //obtener por ID
+  static async getById(id) {
+    return await Usuario.findById(id).select('-password');
+  }
 }
 
 //validaciones:

@@ -5,16 +5,30 @@ import { usuarioModel } from '../models/usuario.model.js';
 import enviarCorreo from '../utils/email.service.js';
 import { soloAdmin } from '../middlewares/auth.js';
 import { verificarToken } from '../middlewares/auth.js';
-
+import multer from 'multer';
 //Instancia de Enrutador:
 const router = express.Router();
 
-// Ruta del Registro
-router.post('/registro', async (req, res) => {
+//Configuración de multer (si se necesita para subir imágenes de perfil, por ejemplo)
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + '-' + file.originalname;
+    cb(null, uniqueName);
+  }
+});
+const upload = multer({ storage: storage });
+
+// Ruta del Registro con multer para subir imagen de usuario
+router.post('/registro', upload.single('imagen'), async (req, res) => {
   try {
     const { nombre, email, password } = req.body;
+    const imagen = req.file ? req.file.filename : null;
+
     // Usamos usuarioModel.create para registrar y validar
-    const nuevoUsuario = await usuarioModel.create({ nombre, email, password });
+    const nuevoUsuario = await usuarioModel.create({ nombre, email, password, imagen });
     await enviarCorreo(email, 'Bienvenido a VerdeNexo', `<p>Hola ${nombre}, tu cuenta ha sido creada exitosamente.</p>`);
     res.status(201).json({ mensaje: 'Usuario registrado y correo enviado', usuario: nuevoUsuario });
   } catch (error) {
@@ -57,6 +71,16 @@ try {
 } catch (error) {
   res.status(500).json({ mensaje: 'area restringida'});
 }
+});
+
+//Ruta para obtener usuarios registrados (solo admin)
+router.get('/usuarios', verificarToken, soloAdmin, async (req, res) => {
+  try {
+    const usuarios = await usuarioModel.getAll();
+    res.status(200).json(usuarios);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al obtener usuarios', error: error.message });
+  }
 });
 
 export default router;

@@ -1,6 +1,7 @@
 //Importaciones:
 import { productoModel } from '../models/producto.model.js';
 
+//Controlador de Productos:
 export class ProductosController {
   // Obtener todos los productos
   static async obtenerProductos(req, res) {

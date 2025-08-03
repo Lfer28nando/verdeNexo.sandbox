@@ -51,10 +51,7 @@ async function login(e) {
     const data = await res.json();
 
     if (res.ok) {
-      console.log('✅ Login exitoso, datos recibidos:', data);
       localStorage.setItem('usuario', JSON.stringify(data.usuario));
-      console.log('💾 Usuario guardado en localStorage:', data.usuario);
-      
       alert('Sesión iniciada correctamente');
 
       const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
@@ -64,15 +61,12 @@ async function login(e) {
 
       // Redirigir según el rol
       if (data.usuario.rol === 'admin') {
-        console.log('🔄 Redirigiendo a admin...');
         window.location.href = '/admin';
       } else {
-        console.log('🔄 Redirigiendo a inicio...');
         window.location.href = '/';
       }
 
     } else {
-      console.log('❌ Error en login:', data);
       alert(`Error: ${data.mensaje}`);
     }
 
@@ -128,46 +122,28 @@ function actualizarInterfazUsuario(usuario) {
 
 async function verificarAccesoAdmin() {
   try {
-    console.log('🔍 Verificando acceso admin...');
-    
     // Verificar si hay usuario en localStorage
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    console.log('👤 Usuario en localStorage:', usuario);
     
-    if (!usuario) {
-      console.log('❌ No hay usuario en localStorage');
+    if (!usuario || usuario.rol !== 'admin') {
       window.location.replace('/');
       return false;
     }
-    
-    if (usuario.rol !== 'admin') {
-      console.log('❌ Usuario no es admin. Rol:', usuario.rol);
-      window.location.replace('/');
-      return false;
-    }
-
-    console.log('✅ Usuario es admin, verificando con servidor...');
 
     // Verificar con el servidor si el token es válido
     const res = await fetch('http://localhost:3333/api/auth/admin', {
       credentials: 'include'
     });
 
-    console.log('📡 Respuesta del servidor:', res.status, res.statusText);
-
     if (res.ok) {
-      console.log('✅ Acceso admin verificado correctamente');
       document.documentElement.style.visibility = 'visible';
       return true;
     } else {
-      const errorData = await res.json().catch(() => ({}));
-      console.log('❌ Error del servidor:', errorData);
       localStorage.removeItem('usuario');
       window.location.replace('/');
       return false;
     }
   } catch (error) {
-    console.error('❌ Error al verificar acceso admin:', error);
     localStorage.removeItem('usuario');
     window.location.replace('/');
     return false;
@@ -202,115 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (botones) botones.style.display = 'block';
     if (avatar) avatar.style.display = 'none';
   }
-
-  // Cargar productos en el slider si estamos en la página de inicio
-  if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-    cargarProductosSlider();
-  }
 });
-
-// Función para cargar productos en el slider
-async function cargarProductosSlider() {
-  try {
-    console.log('🛒 Cargando productos para el slider...');
-    const response = await fetch('http://localhost:3333/api/productos');
-    console.log('📡 Respuesta del servidor:', response.status, response.statusText);
-    
-    if (!response.ok) {
-      throw new Error(`Error HTTP: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    console.log('📦 Datos recibidos:', data);
-    
-    // Verificar si data es un array o si tiene una propiedad con el array
-    let productos;
-    if (Array.isArray(data)) {
-      productos = data;
-    } else if (data.data && Array.isArray(data.data)) {
-      productos = data.data;
-    } else if (data.productos && Array.isArray(data.productos)) {
-      productos = data.productos;
-    } else {
-      console.error('❌ Los datos no son un array válido:', data);
-      throw new Error('Formato de datos inválido');
-    }
-    
-    console.log('✅ Productos procesados:', productos.length, 'productos encontrados');
-    
-    const listaProductos = document.getElementById('lista-productos');
-    if (!listaProductos) {
-      console.warn('❌ Elemento lista-productos no encontrado');
-      return;
-    }
-
-    if (productos.length === 0) {
-      listaProductos.innerHTML = '<p style="text-align: center; color: #ccc; padding: 2rem;">No hay productos disponibles</p>';
-      return;
-    }
-
-    listaProductos.innerHTML = productos.map(producto => `
-      <div class="loom-item">
-        <img src="http://localhost:3333/uploads/${producto.imagen}" 
-             alt="${producto.nombre}" 
-             onerror="this.src='/img/default-product.png'">
-        <div style="padding: 1rem 0;">
-          <h6 style="color: #fff; margin-bottom: 0.5rem; font-weight: 600;">${producto.nombre}</h6>
-          <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 0.8rem;">${producto.descripcion}</p>
-          <p style="color: #fff; font-weight: bold; font-size: 1.1rem; margin-bottom: 1rem;">$${producto.precio.toLocaleString()}</p>
-          <button class="loom-btn" onclick="agregarAlCarrito('${producto._id}')" style="width: 100%; font-size: 0.8rem;">
-            Agregar al carrito
-          </button>
-        </div>
-      </div>
-    `).join('');
-    
-    console.log('✅ Productos cargados en el slider correctamente');
-    
-  } catch (error) {
-    console.error('❌ Error al cargar productos:', error);
-    const listaProductos = document.getElementById('lista-productos');
-    if (listaProductos) {
-      listaProductos.innerHTML = `
-        <div style="text-align: center; color: #ccc; padding: 2rem;">
-          <p>Error al cargar productos</p>
-          <button class="loom-btn" onclick="cargarProductosSlider()" style="margin-top: 1rem;">
-            Intentar de nuevo
-          </button>
-        </div>
-      `;
-    }
-  }
-}
-
-// Función para agregar al carrito (placeholder)
-function agregarAlCarrito(productoId) {
-  console.log('Agregando producto al carrito:', productoId);
-  alert('Producto agregado al carrito (funcionalidad en desarrollo)');
-}
-
-// Función para el slider de productos
-function moverSlider(direccion) {
-  const slider = document.getElementById("loomSlider");
-  if (!slider) {
-    console.warn('Slider no encontrado');
-    return;
-  }
-
-  const items = slider.querySelectorAll(".loom-item");
-  if (items.length === 0) {
-    console.warn('No hay elementos en el slider');
-    return;
-  }
-
-  const itemWidth = items[0].offsetWidth + 16; // ancho + gap
-  const scrollAmount = direccion * itemWidth * 1; // mover 1 ítem
-  
-  slider.scrollBy({
-    left: scrollAmount,
-    behavior: 'smooth'
-  });
-}
 
 // Solicitar permiso (placeholder)
 function solicitarPermiso() {
@@ -358,7 +226,6 @@ function simularLogin() {
     rol: 'admin'
   };
   
-  console.log('🧪 Simulando login de admin:', usuarioTest);
   localStorage.setItem('usuario', JSON.stringify(usuarioTest));
   
   const botones = document.getElementById('botonesSesion');
@@ -370,65 +237,16 @@ function simularLogin() {
   if (usuarioNombre) usuarioNombre.textContent = usuarioTest.nombre;
   
   console.log('✅ Usuario test simulado:', usuarioTest);
-  alert('Usuario de prueba logueado. Ahora puedes intentar ir a /admin');
-}
-
-// Función para verificar estado actual
-function verificarEstado() {
-  const usuario = JSON.parse(localStorage.getItem('usuario'));
-  console.log('🔍 Estado actual:');
-  console.log('Usuario en localStorage:', usuario);
-  console.log('URL actual:', window.location.href);
-  console.log('Pathname:', window.location.pathname);
-}
-
-// Función para limpiar estado
-function limpiarEstado() {
-  localStorage.removeItem('usuario');
-  console.log('🧹 Estado limpiado');
-  location.reload();
-}
-
-// Función para probar la API de productos
-async function probarAPI() {
-  try {
-    console.log('🧪 Probando API de productos...');
-    const response = await fetch('http://localhost:3333/api/productos');
-    console.log('Response status:', response.status);
-    console.log('Response headers:', [...response.headers.entries()]);
-    
-    const text = await response.text();
-    console.log('Response text:', text);
-    
-    try {
-      const json = JSON.parse(text);
-      console.log('Response JSON:', json);
-    } catch (e) {
-      console.log('No es JSON válido');
-    }
-  } catch (error) {
-    console.error('Error en la prueba:', error);
-  }
+  alert('Usuario de prueba logueado. Ahora puedes probar el botón de cerrar sesión.');
 }
 
 // Hacer las funciones disponibles globalmente
 window.simularLogin = simularLogin;
-window.verificarEstado = verificarEstado;
-window.limpiarEstado = limpiarEstado;
-window.probarAPI = probarAPI;
 window.cerrarSesion = cerrarSesion;
 window.register = register;
 window.login = login;
 window.solicitarPermiso = solicitarPermiso;
-window.moverSlider = moverSlider;
-window.cargarProductosSlider = cargarProductosSlider;
-window.agregarAlCarrito = agregarAlCarrito;
 
 // Log para debugging
 console.log('🚀 Scripts de VerdeNexo cargados correctamente');
-console.log('💡 Funciones disponibles en consola:');
-console.log('  - simularLogin(): Simula login de admin');
-console.log('  - verificarEstado(): Muestra estado actual');
-console.log('  - limpiarEstado(): Limpia localStorage y recarga');
-console.log('  - probarAPI(): Prueba la conexión con la API de productos');
-console.log('  - cargarProductosSlider(): Recarga manualmente los productos');
+console.log('💡 Para probar el logout, ejecuta: simularLogin() en la consola');
