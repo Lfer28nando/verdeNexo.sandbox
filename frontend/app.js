@@ -11,10 +11,6 @@ app.get('/', (req, res) => {
     res.render('paginas/inicio');
 });
 
-app.get('/catalogo', (req, res) => {
-    res.render('paginas/catalogo');
-});
-
 // Rutas de admin sin validación del servidor (se maneja en el cliente)
 app.get('/admin', (req, res) => {
     res.render('paginas/homeAdmin');

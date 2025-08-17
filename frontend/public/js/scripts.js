@@ -3,9 +3,20 @@
 async function register(e) {
   e.preventDefault();
 
-  const nombre = document.getElementById('registerNombre').value;
-  const email = document.getElementById('registerEmail').value;
+  const nombre = document.getElementById('registerNombre').value.trim();
+  const email = document.getElementById('registerEmail').value.trim();
   const password = document.getElementById('registerPassword').value;
+
+  // Validaciones básicas en frontend
+  if (!nombre || !email || !password) {
+    alert('Por favor completa todos los campos obligatorios');
+    return false;
+  }
+
+  if (password.length < 6) {
+    alert('La contraseña debe tener al menos 6 caracteres');
+    return false;
+  }
 
   try {
     const res = await fetch('http://localhost:3333/api/auth/registro', {
@@ -19,16 +30,26 @@ async function register(e) {
 
     if (res.ok) {
       localStorage.setItem('usuario', JSON.stringify(data.usuario));
-      alert('Cuenta creada con éxito');
+      alert('Cuenta creada con éxito. ¡Bienvenido a VerdeNexo!');
+      
+      // Cerrar modal
       const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
-      modal.hide();
+      if (modal) modal.hide();
+      
+      // Actualizar interfaz
       actualizarInterfazUsuario(data.usuario);
+      
+      // Limpiar formulario
+      document.getElementById('registerNombre').value = '';
+      document.getElementById('registerEmail').value = '';
+      document.getElementById('registerPassword').value = '';
+      
     } else {
       alert(`Error: ${data.mensaje}`);
     }
   } catch (error) {
     console.error('Error en el registro:', error);
-    alert('Error en el servidor');
+    alert('Error de conexión. Por favor intenta nuevamente.');
   }
 
   return false;
@@ -51,9 +72,9 @@ async function login(e) {
     const data = await res.json();
 
     if (res.ok) {
-      console.log('✅ Login exitoso, datos recibidos:', data);
+      console.log(' Login exitoso, datos recibidos:', data);
       localStorage.setItem('usuario', JSON.stringify(data.usuario));
-      console.log('💾 Usuario guardado en localStorage:', data.usuario);
+      console.log(' Usuario guardado en localStorage:', data.usuario);
       
       alert('Sesión iniciada correctamente');
 
@@ -64,15 +85,15 @@ async function login(e) {
 
       // Redirigir según el rol
       if (data.usuario.rol === 'admin') {
-        console.log('🔄 Redirigiendo a admin...');
+        console.log(' Redirigiendo a admin...');
         window.location.href = '/admin';
       } else {
-        console.log('🔄 Redirigiendo a inicio...');
+        console.log(' Redirigiendo a inicio...');
         window.location.href = '/';
       }
 
     } else {
-      console.log('❌ Error en login:', data);
+      console.log(' Error en login:', data);
       alert(`Error: ${data.mensaje}`);
     }
 
@@ -86,28 +107,54 @@ async function login(e) {
 
 async function cerrarSesion() {
   try {
+    // Mostrar indicador de carga
+    const originalText = event.target ? event.target.textContent : '';
+    if (event.target) event.target.textContent = 'Cerrando...';
+
     const response = await fetch('http://localhost:3333/api/auth/logout', {
       method: 'POST',
       credentials: 'include'
     });
 
-    if (response.ok) {
-      localStorage.removeItem('usuario');
-      
-      const botones = document.getElementById('botonesSesion');
-      const avatar = document.getElementById('avatarSesion');
-      
-      if (botones) botones.style.display = 'block';
-      if (avatar) avatar.style.display = 'none';
+    // Siempre limpiar localStorage y actualizar interfaz, incluso si el servidor falla
+    localStorage.removeItem('usuario');
+    
+    // Actualizar interfaz inmediatamente
+    const botones = document.getElementById('botonesSesion');
+    const avatar = document.getElementById('avatarSesion');
+    
+    if (botones) botones.style.display = 'block';
+    if (avatar) avatar.style.display = 'none';
 
+    // Limpiar nombre de usuario
+    const userName = document.getElementById('userName');
+    const usuarioNombre = document.getElementById('usuarioNombre');
+    if (userName) userName.innerText = '';
+    if (usuarioNombre) usuarioNombre.textContent = '';
+
+    if (response.ok) {
       alert('Sesión cerrada exitosamente');
-      window.location.href = '/';
     } else {
-      throw new Error('Error en la respuesta del servidor');
+      alert('Sesión cerrada localmente');
     }
+    
+    // Redirigir a la página principal
+    window.location.href = '/';
+    
   } catch (err) {
     console.error('Error al cerrar sesión:', err);
-    alert('No se pudo cerrar la sesión. Intenta nuevamente.');
+    
+    // Aún así, cerrar sesión localmente
+    localStorage.removeItem('usuario');
+    
+    const botones = document.getElementById('botonesSesion');
+    const avatar = document.getElementById('avatarSesion');
+    
+    if (botones) botones.style.display = 'block';
+    if (avatar) avatar.style.display = 'none';
+    
+    alert('Sesión cerrada localmente (error de conexión)');
+    window.location.href = '/';
   }
 }
 
@@ -124,50 +171,73 @@ function actualizarInterfazUsuario(usuario) {
   
   const usuarioNombre = document.getElementById('usuarioNombre');
   if (usuarioNombre) usuarioNombre.textContent = usuario.nombre || 'Usuario';
+  
+  console.log('✅ Interfaz actualizada para usuario:', usuario.nombre);
+}
+
+function actualizarInterfazLogout() {
+  // Limpiar localStorage
+  localStorage.removeItem('usuario');
+  
+  // Mostrar botones de login/registro y ocultar avatar
+  const botones = document.getElementById('botonesSesion');
+  const avatar = document.getElementById('avatarSesion');
+  
+  if (botones) botones.style.display = 'block';
+  if (avatar) avatar.style.display = 'none';
+  
+  // Limpiar nombres de usuario
+  const userName = document.getElementById('userName');
+  const usuarioNombre = document.getElementById('usuarioNombre');
+  
+  if (userName) userName.innerText = '';
+  if (usuarioNombre) usuarioNombre.textContent = '';
+  
+  console.log('✅ Interfaz actualizada para logout');
 }
 
 async function verificarAccesoAdmin() {
   try {
-    console.log('🔍 Verificando acceso admin...');
+    console.log(' Verificando acceso admin...');
     
     // Verificar si hay usuario en localStorage
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    console.log('👤 Usuario en localStorage:', usuario);
+    console.log(' Usuario en localStorage:', usuario);
     
     if (!usuario) {
-      console.log('❌ No hay usuario en localStorage');
+      console.log(' No hay usuario en localStorage');
       window.location.replace('/');
       return false;
     }
     
     if (usuario.rol !== 'admin') {
-      console.log('❌ Usuario no es admin. Rol:', usuario.rol);
+      console.log(' Usuario no es admin. Rol:', usuario.rol);
       window.location.replace('/');
       return false;
     }
 
-    console.log('✅ Usuario es admin, verificando con servidor...');
+    console.log(' Usuario es admin, verificando con servidor...');
 
     // Verificar con el servidor si el token es válido
     const res = await fetch('http://localhost:3333/api/auth/admin', {
       credentials: 'include'
     });
 
-    console.log('📡 Respuesta del servidor:', res.status, res.statusText);
+    console.log(' Respuesta del servidor:', res.status, res.statusText);
 
     if (res.ok) {
-      console.log('✅ Acceso admin verificado correctamente');
+      console.log(' Acceso admin verificado correctamente');
       document.documentElement.style.visibility = 'visible';
       return true;
     } else {
       const errorData = await res.json().catch(() => ({}));
-      console.log('❌ Error del servidor:', errorData);
+      console.log(' Error del servidor:', errorData);
       localStorage.removeItem('usuario');
       window.location.replace('/');
       return false;
     }
   } catch (error) {
-    console.error('❌ Error al verificar acceso admin:', error);
+    console.error(' Error al verificar acceso admin:', error);
     localStorage.removeItem('usuario');
     window.location.replace('/');
     return false;
@@ -196,11 +266,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   } else {
-    const botones = document.getElementById('botonesSesion');
-    const avatar = document.getElementById('avatarSesion');
-    
-    if (botones) botones.style.display = 'block';
-    if (avatar) avatar.style.display = 'none';
+    // Asegurar que la interfaz esté en estado de logout
+    actualizarInterfazLogout();
   }
 
   // Cargar productos en el slider si estamos en la página de inicio
@@ -212,16 +279,16 @@ document.addEventListener('DOMContentLoaded', () => {
 // Función para cargar productos en el slider
 async function cargarProductosSlider() {
   try {
-    console.log('🛒 Cargando productos para el slider...');
+    console.log(' Cargando productos para el slider...');
     const response = await fetch('http://localhost:3333/api/productos');
-    console.log('📡 Respuesta del servidor:', response.status, response.statusText);
+    console.log(' Respuesta del servidor:', response.status, response.statusText);
     
     if (!response.ok) {
       throw new Error(`Error HTTP: ${response.status}`);
     }
     
     const data = await response.json();
-    console.log('📦 Datos recibidos:', data);
+    console.log(' Datos recibidos:', data);
     
     // Verificar si data es un array o si tiene una propiedad con el array
     let productos;
@@ -232,15 +299,15 @@ async function cargarProductosSlider() {
     } else if (data.productos && Array.isArray(data.productos)) {
       productos = data.productos;
     } else {
-      console.error('❌ Los datos no son un array válido:', data);
+      console.error(' Los datos no son un array válido:', data);
       throw new Error('Formato de datos inválido');
     }
     
-    console.log('✅ Productos procesados:', productos.length, 'productos encontrados');
+    console.log(' Productos procesados:', productos.length, 'productos encontrados');
     
     const listaProductos = document.getElementById('lista-productos');
     if (!listaProductos) {
-      console.warn('❌ Elemento lista-productos no encontrado');
+      console.warn(' Elemento lista-productos no encontrado');
       return;
     }
 
@@ -265,10 +332,10 @@ async function cargarProductosSlider() {
       </div>
     `).join('');
     
-    console.log('✅ Productos cargados en el slider correctamente');
+    console.log(' Productos cargados en el slider correctamente');
     
   } catch (error) {
-    console.error('❌ Error al cargar productos:', error);
+    console.error(' Error al cargar productos:', error);
     const listaProductos = document.getElementById('lista-productos');
     if (listaProductos) {
       listaProductos.innerHTML = `
@@ -358,7 +425,7 @@ function simularLogin() {
     rol: 'admin'
   };
   
-  console.log('🧪 Simulando login de admin:', usuarioTest);
+  console.log(' Simulando login de admin:', usuarioTest);
   localStorage.setItem('usuario', JSON.stringify(usuarioTest));
   
   const botones = document.getElementById('botonesSesion');
@@ -369,7 +436,7 @@ function simularLogin() {
   if (avatar) avatar.style.display = 'block';
   if (usuarioNombre) usuarioNombre.textContent = usuarioTest.nombre;
   
-  console.log('✅ Usuario test simulado:', usuarioTest);
+  console.log(' Usuario test simulado:', usuarioTest);
   alert('Usuario de prueba logueado. Ahora puedes intentar ir a /admin');
 }
 
@@ -423,10 +490,11 @@ window.solicitarPermiso = solicitarPermiso;
 window.moverSlider = moverSlider;
 window.cargarProductosSlider = cargarProductosSlider;
 window.agregarAlCarrito = agregarAlCarrito;
+window.actualizarInterfazLogout = actualizarInterfazLogout; // Agregar para debugging
 
 // Log para debugging
-console.log('🚀 Scripts de VerdeNexo cargados correctamente');
-console.log('💡 Funciones disponibles en consola:');
+console.log(' Scripts de VerdeNexo cargados correctamente');
+console.log(' Funciones disponibles en consola:');
 console.log('  - simularLogin(): Simula login de admin');
 console.log('  - verificarEstado(): Muestra estado actual');
 console.log('  - limpiarEstado(): Limpia localStorage y recarga');
